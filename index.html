@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsFlow - Modern News App</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --dark-color: #1f2937;
+            --light-color: #f9fafb;
+            --gray-color: #6b7280;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            overflow-x: hidden;
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand i {
+            margin-right: 10px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.2);
+        }
+
+        .hero-title {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-weight: 300;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .filter-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .filter-section:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            margin-bottom: 2rem;
+            height: 100%;
+            background-color: white;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .news-img {
+            height: 200px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .news-card:hover .news-img {
+            transform: scale(1.03);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .news-category {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .news-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-desc {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-source {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .news-date {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+
+        .read-more {
+            color: var(--primary-color);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+
+        .read-more i {
+            margin-left: 5px;
+            transition: var(--transition);
+        }
+
+        .read-more:hover {
+            color: var(--secondary-color);
+        }
+
+        .read-more:hover i {
+            transform: translateX(3px);
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 3rem;
+            height: 3rem;
+            margin: 2rem auto;
+            color: var(--primary-color);
+        }
+
+        .no-news {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-color);
+            display: none;
+        }
+
+        .footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-color);
+        }
+
+        .copyright {
+            border-top: 1px solid #374151;
+            padding-top: 1.5rem;
+            margin-top: 2rem;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .form-select {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            transition: var(--transition);
+        }
+
+        .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.15);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .news-card {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .country-flag {
+            width: 20px;
+            height: 15px;
+            margin-right: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .country-selector {
+            position: relative;
+        }
+
+        .country-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .country-dropdown.show {
+            display: block;
+        }
+
+        .country-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .country-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .selected-country {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-newspaper"></i>
+                NewsFlow
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-category="">Top Stories</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-category="business">Business</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-category="technology">Tech</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-category="sports">Sports</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-category="health">Health</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section animate__animated animate__fadeIn">
+        <div class="container text-center">
+            <h1 class="hero-title">Global News at Your Fingertips</h1>
+            <p class="hero-subtitle">Discover stories from around the world, tailored to your interests</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Filters Section -->
+        <section class="filter-section animate__animated animate__fadeInUp">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="filter-label">Search News</label>
+                    <div class="input-group">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search for news...">
+                        <button class="btn btn-primary" type="button" id="searchBtn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <label class="filter-label">Category</label>
+                    <select class="form-select" id="categorySelect">
+                        <option value="" selected>All Categories</option>
+                        <option value="business">Business</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="health">Health</option>
+                        <option value="science">Science</option>
+                        <option value="sports">Sports</option>
+                        <option value="technology">Technology</option>
+                        <option value="politics">Politics</option>
+                        <option value="environment">Environment</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="filter-label">Language</label>
+                    <select class="form-select" id="languageSelect">
+                        <option value="en" selected>English</option>
+                        <option value="hi">Hindi</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="es">Spanish</option>
+                        <option value="ru">Russian</option>
+                        <option value="ar">Arabic</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="pt">Portuguese</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="filter-label">Country</label>
+                    <div class="country-selector">
+                        <div class="form-select selected-country" id="countrySelector">
+                            <img src="https://flagcdn.com/w20/us.png" class="country-flag" id="selectedFlag">
+                            <span id="selectedCountry">United States</span>
+                        </div>
+                        <div class="country-dropdown" id="countryDropdown">
+                            <div class="country-item" data-country="us" data-code="us">
+                                <img src="https://flagcdn.com/w20/us.png" class="country-flag">
+                                United States
+                            </div>
+                            <div class="country-item" data-country="gb" data-code="gb">
+                                <img src="https://flagcdn.com/w20/gb.png" class="country-flag">
+                                United Kingdom
+                            </div>
+                            <div class="country-item" data-country="in" data-code="in">
+                                <img src="https://flagcdn.com/w20/in.png" class="country-flag">
+                                India
+                            </div>
+                            <div class="country-item" data-country="ca" data-code="ca">
+                                <img src="https://flagcdn.com/w20/ca.png" class="country-flag">
+                                Canada
+                            </div>
+                            <div class="country-item" data-country="au" data-code="au">
+                                <img src="https://flagcdn.com/w20/au.png" class="country-flag">
+                                Australia
+                            </div>
+                            <div class="country-item" data-country="de" data-code="de">
+                                <img src="https://flagcdn.com/w20/de.png" class="country-flag">
+                                Germany
+                            </div>
+                            <div class="country-item" data-country="fr" data-code="fr">
+                                <img src="https://flagcdn.com/w20/fr.png" class="country-flag">
+                                France
+                            </div>
+                            <div class="country-item" data-country="jp" data-code="jp">
+                                <img src="https://flagcdn.com/w20/jp.png" class="country-flag">
+                                Japan
+                            </div>
+                            <div class="country-item" data-country="br" data-code="br">
+                                <img src="https://flagcdn.com/w20/br.png" class="country-flag">
+                                Brazil
+                            </div>
+                            <div class="country-item" data-country="ng" data-code="ng">
+                                <img src="https://flagcdn.com/w20/ng.png" class="country-flag">
+                                Nigeria
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="countryCode" value="us">
+                </div>
+            </div>
+        </section>
+
+        <!-- News Grid -->
+        <div class="row" id="newsContainer">
+            <!-- News cards will be inserted here dynamically -->
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner spinner-border" role="status" id="loadingSpinner">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <!-- No News Message -->
+        <div class="no-news" id="noNews">
+            <i class="fas fa-newspaper fa-3x mb-3"></i>
+            <h4>No news found</h4>
+            <p>Try changing your filters or search term</p>
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-4 mb-5 animate__animated animate__fadeIn" id="loadMoreContainer">
+            <button class="btn btn-primary px-4" id="loadMoreBtn">
+                <i class="fas fa-plus me-2"></i> Load More
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="footer-title">
+                        <i class="fas fa-newspaper me-2"></i> NewsFlow
+                    </h4>
+                    <p>Your window to world news, with country-specific coverage across all major categories.</p>
+                    <div class="social-icons mt-3">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="footer-title">Top Countries</h5>
+                    <div class="footer-links">
+                        <a href="#" class="country-link" data-code="us"><i class="fas fa-flag-usa me-2"></i> USA News</a>
+                        <a href="#" class="country-link" data-code="gb"><i class="fas fa-flag-uk me-2"></i> UK News</a>
+                        <a href="#" class="country-link" data-code="in"><i class="fas fa-flag me-2"></i> India News</a>
+                        <a href="#" class="country-link" data-code="ca"><i class="fas fa-flag me-2"></i> Canada News</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5 class="footer-title">Newsletter</h5>
+                    <p>Get daily updates from your selected country</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Your email">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright text-center">
+                &copy; 2023 NewsFlow. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API Configuration for NewsData.io
+        const API_KEY = 'pub_b67c3c4438fa4c0b9937e982da7434f6';
+        const BASE_URL = 'https://newsdata.io/api/1/news';
+        
+        // App State
+        let currentPage = 1;
+        let currentCategory = '';
+        let currentCountry = 'us';
+        let currentSearchTerm = '';
+        let totalResults = 0;
+        let nextPage = null;
+        let currentLanguage = 'en';
+
+        // DOM Elements
+        const newsContainer = document.getElementById('newsContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const noNews = document.getElementById('noNews');
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        const loadMoreContainer = document.getElementById('loadMoreContainer');
+        const categorySelect = document.getElementById('categorySelect');
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const countrySelector = document.getElementById('countrySelector');
+        const countryDropdown = document.getElementById('countryDropdown');
+        const countryItems = document.querySelectorAll('.country-item');
+        const selectedFlag = document.getElementById('selectedFlag');
+        const selectedCountry = document.getElementById('selectedCountry');
+        const countryCode = document.getElementById('countryCode');
+        const countryLinks = document.querySelectorAll('.country-link');
+        const languageSelect = document.getElementById('languageSelect');
+
+        // Country data with names and codes
+        const countries = {
+            us: { name: 'United States', code: 'us', flag: 'https://flagcdn.com/w20/us.png' },
+            gb: { name: 'United Kingdom', code: 'gb', flag: 'https://flagcdn.com/w20/gb.png' },
+            in: { name: 'India', code: 'in', flag: 'https://flagcdn.com/w20/in.png' },
+            ca: { name: 'Canada', code: 'ca', flag: 'https://flagcdn.com/w20/ca.png' },
+            au: { name: 'Australia', code: 'au', flag: 'https://flagcdn.com/w20/au.png' },
+            de: { name: 'Germany', code: 'de', flag: 'https://flagcdn.com/w20/de.png' },
+            fr: { name: 'France', code: 'fr', flag: 'https://flagcdn.com/w20/fr.png' },
+            jp: { name: 'Japan', code: 'jp', flag: 'https://flagcdn.com/w20/jp.png' },
+            br: { name: 'Brazil', code: 'br', flag: 'https://flagcdn.com/w20/br.png' },
+            ng: { name: 'Nigeria', code: 'ng', flag: 'https://flagcdn.com/w20/ng.png' }
+        };
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            fetchNews();
+            setupEventListeners();
+        });
+
+        // Set up event listeners
+        function setupEventListeners() {
+            loadMoreBtn.addEventListener('click', loadMoreNews);
+            searchBtn.addEventListener('click', handleSearch);
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') handleSearch();
+            });
+            
+
+            // Category select change
+            categorySelect.addEventListener('change', function() {
+                currentCategory = this.value;
+                currentPage = 1;
+                fetchNews();
+            });
+
+            // Language select change
+            languageSelect.addEventListener('change', function() {
+                currentLanguage = this.value;
+                currentPage = 1;
+                fetchNews();
+            });
+            
+            // Nav link clicks
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentCategory = this.dataset.category || '';
+                    currentPage = 1;
+                    fetchNews();
+                    
+                    // Update active state
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update category select to match
+                    categorySelect.value = currentCategory;
+                });
+            });
+            
+            // Country selector dropdown
+            countrySelector.addEventListener('click', function() {
+                countryDropdown.classList.toggle('show');
+            });
+            
+            // Country item selection
+            countryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const country = this.dataset.country;
+                    const code = this.dataset.code;
+                    
+                    // Update selected country display
+                    selectedFlag.src = countries[code].flag;
+                    selectedCountry.textContent = countries[code].name;
+                    countryCode.value = code;
+                    currentCountry = code;
+                    
+                    // Close dropdown
+                    countryDropdown.classList.remove('show');
+                    
+                    // Refresh news
+                    currentPage = 1;
+                    fetchNews();
+                });
+            });
+            
+            // Country links in footer
+            countryLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const code = this.dataset.code;
+                    
+                    // Update selected country
+                    selectedFlag.src = countries[code].flag;
+                    selectedCountry.textContent = countries[code].name;
+                    countryCode.value = code;
+                    currentCountry = code;
+                    
+                    // Refresh news
+                    currentPage = 1;
+                    fetchNews();
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!countrySelector.contains(e.target)) {
+                    countryDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Fetch news from API
+        async function fetchNews(page = currentPage, category = currentCategory, country = currentCountry, searchTerm = currentSearchTerm, language = currentLanguage) {
+            showLoading();
+            let url = `${BASE_URL}?apikey=${API_KEY}&country=${country}&language=${language}`;
+            if (searchTerm) {
+                url += `&q=${encodeURIComponent(searchTerm)}`;
+            }
+            if (category) {
+                url += `&category=${category}`;
+            }
+            if (page > 1 && nextPage) {
+                url += `&page=${nextPage}`;
+            }
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                if (data.status === 'success' && data.results.length > 0) {
+                    totalResults = data.totalResults;
+                    nextPage = data.nextPage;
+                    if (page === 1) {
+                        newsContainer.innerHTML = '';
+                    }
+                    displayNews(data.results);
+                    hideNoNews();
+                    if (nextPage) {
+                        showLoadMore();
+                    } else {
+                        hideLoadMore();
+                    }
+                } else {
+                    if (page === 1) {
+                        showNoNews();
+                    } else {
+                        hideLoadMore();
+                    }
+                }
+            } catch (error) {
+                showNoNews();
+                console.error('Fetch Error:', error);
+                noNews.innerHTML = `
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                    <h4>Error loading news</h4>
+                    <p>${error.message}</p>
+                    <button class="btn btn-primary mt-2" onclick="fetchNews()">Retry</button>
+                `;
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Display news articles
+        function displayNews(articles) {
+            articles.forEach((article, index) => {
+                const newsCard = createNewsCard(article, index);
+                newsContainer.appendChild(newsCard);
+                
+                // Add animation delay based on index
+                setTimeout(() => {
+                    newsCard.classList.add('animate-fade-in');
+                }, index * 100);
+            });
+        }
+
+        // Create a news card element
+        function createNewsCard(article, index) {
+            const col = document.createElement('div');
+            col.className = 'col-lg-4 col-md-6';
+            
+            const card = document.createElement('div');
+            card.className = 'news-card';
+            
+            // Format date
+            const publishedAt = article.pubDate ? new Date(article.pubDate) : null;
+            const dateString = publishedAt ? publishedAt.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            }) : '';
+            
+            // Get category from article or use current category
+            const category = article.category ? article.category[0] : currentCategory || 'general';
+            const country = article.country ? article.country[0] : currentCountry;
+            const countryName = countries[country]?.name || country.toUpperCase();
+            
+            // Create card HTML
+            card.innerHTML = `
+                <img src="${article.image_url || 'https://via.placeholder.com/600x400?text=No+Image'}" 
+                     class="card-img-top news-img" 
+                     alt="${article.title}" 
+                     onerror="this.src='https://via.placeholder.com/600x400?text=No+Image'">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="news-category">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
+                        <span class="badge bg-secondary">
+                            <img src="${countries[country]?.flag || 'https://flagcdn.com/w20/xx.png'}" 
+                                 style="width: 16px; height: 12px; margin-right: 5px;">
+                            ${countryName}
+                        </span>
+                    </div>
+                    <h5 class="news-title">${article.title || 'No title available'}</h5>
+                    <p class="news-desc">${article.description || 'No description available'}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <small class="text-muted">${article.source_id || 'Unknown source'}</small>
+                        <small class="text-muted">${dateString}</small>
+                    </div>
+                    <a href="${article.link}" target="_blank" class="read-more mt-2 d-block">
+                        Read more <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            `;
+            
+            col.appendChild(card);
+            return col;
+        }
+
+        // Load more news
+        function loadMoreNews() {
+            currentPage++;
+            fetchNews();
+        }
+
+        // Handle search
+        function handleSearch() {
+            currentSearchTerm = searchInput.value.trim();
+            currentPage = 1;
+            fetchNews();
+        }
+
+        // Show loading spinner
+        function showLoading() {
+            loadingSpinner.style.display = 'block';
+            loadMoreBtn.disabled = true;
+        }
+
+        // Hide loading spinner
+        function hideLoading() {
+            loadingSpinner.style.display = 'none';
+            loadMoreBtn.disabled = false;
+        }
+
+        // Show no news message
+        function showNoNews() {
+            noNews.style.display = 'block';
+            hideLoadMore();
+        }
+
+        // Hide no news message
+        function hideNoNews() {
+            noNews.style.display = 'none';
+        }
+
+        // Show load more button
+        function showLoadMore() {
+            loadMoreContainer.style.display = 'block';
+        }
+
+        // Hide load more button
+        function hideLoadMore() {
+            loadMoreContainer.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
